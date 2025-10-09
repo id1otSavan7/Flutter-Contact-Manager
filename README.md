@@ -1,3 +1,5 @@
-# contact_manager
+# contact_manager 
 
-A new Flutter project.
+--In Progress
+
+A Simple Flutter Project that allows you to record and modify any contact data.
