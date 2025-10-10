@@ -1,19 +1,17 @@
-import 'package:contact_manager/functions/crud.dart';
+import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/functions/globals.dart';
 import 'package:contact_manager/utils/showContactInfo.dart';
 import 'package:flutter/material.dart';
 
 class ContactTile extends StatefulWidget {
-  final String? recipientName;
-  final String? recipientPhoneNumber;
+  final Contact? contact;
   final int index;
-  final Function(int index, Map<dynamic, dynamic> modifiedData) updateRecipientInfo ;
+  final Function(int index, Contact modifiedData) updateRecipientInfo ;
   final VoidCallback? deleteContactData;
 
   const ContactTile({
     super.key,
-    required this.recipientName,
-    required this.recipientPhoneNumber,
+    required this.contact,
     required this.index,
     required this.updateRecipientInfo,
     required this.deleteContactData,
@@ -29,11 +27,11 @@ class _ContactTileState extends State<ContactTile> {
     final result = await showDialog(
       context: context, 
       builder: (context) => ShowContactInfo(
-        recipientName: contacts[widget.index]['name'], 
-        recipientPhoneNumber: contacts[widget.index]['phoneNumber'], 
-        recipientEmailAddress: contacts[widget.index]['eMail'], 
-        recipientAddress: contacts[widget.index]['homeAddress'], 
-        recipientRelation: contacts[widget.index]['relation'],
+        recipientName: widget.contact!.recipientName, 
+        recipientPhoneNumber: widget.contact!.recipientPhoneNumber, 
+        recipientEmailAddress: widget.contact!.recipientEmailAddress, 
+        recipientAddress: widget.contact!.recipientAddress, 
+        recipientRelation: widget.contact!.recipientRelation,
       ),
     );
 
@@ -42,7 +40,7 @@ class _ContactTileState extends State<ContactTile> {
         widget.deleteContactData!();
       }
       print('Deleting data...');
-    } else if (result is Map<dynamic, dynamic>){
+    } else if (result is Contact){
         widget.updateRecipientInfo(widget.index, result);
     }
   }
@@ -59,26 +57,10 @@ class _ContactTileState extends State<ContactTile> {
             child: Icon(Icons.person),
           ),
         ),
-        title: Text(widget.recipientName ?? 'Unknown Recipient'),
-        subtitle: Text(widget.recipientPhoneNumber ?? ''),
+        title: Text(widget.contact!.recipientName ?? 'Unknown Recipient'),
+        subtitle: Text(widget.contact!.recipientPhoneNumber ?? ''),
         onTap: () {
           showContactInfo();
-          
-          /*
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => RecipientInfoPage(
-                recipientName: contacts[widget.index]['name'] ?? 'Unknown Recipient',
-                recipientPhoneNumber: contacts[widget.index]['phoneNumber'] ?? '',
-                recipientEmailAddress: contacts[widget.index]['eMail'] ?? 'No Data Recorded',
-                recipientAddress: contacts[widget.index]['homeAddress'] ?? 'No Data Recorded',
-                recipientRelation: contacts[widget.index]['relation'] ?? 'No Data Recorded',
-              ),
-            ),
-          );
-          */
         },
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/functions/func_barrel.dart';
 import 'package:contact_manager/utils/appButton.dart';
 import 'package:flutter/material.dart';
@@ -53,13 +54,18 @@ class _ShowContactInfoState extends State<ShowContactInfo> {
   }
 
   void submitModifiedData() {
-    Navigator.pop(context, {
-      'name' : _recipientName.text,
-      'phoneNumber' : _recipientPhoneNumber.text,
-      'eMail' : _recipientEmailAddress.text,
-      'homeAddress' : _recipientAddress.text,
-      'relation' : _recipientRelation.text,
-    });
+    if(_recipientPhoneNumber.text.isNotEmpty){
+      final contact = Contact(
+        recipientName: isDataNull(_recipientName.text, 'Unknown Recipient'), 
+        recipientPhoneNumber: _recipientPhoneNumber.text, 
+        recipientEmailAddress: isDataNull(_recipientEmailAddress.text, 'No data recorded'), 
+        recipientAddress: isDataNull(_recipientAddress.text, 'No data recorded'), 
+        recipientRelation: isDataNull(_recipientRelation.text, 'No data recorded')
+      );
+      Navigator.pop(context, contact);
+    } else {
+      showEmptyFieldError(context);
+    }
   }
 
   void deleteContactData(){

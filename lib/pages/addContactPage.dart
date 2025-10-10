@@ -1,4 +1,5 @@
-import 'package:contact_manager/functions/crud.dart';
+import 'package:contact_manager/data/database.dart';
+import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/functions/helpers.dart';
 import 'package:contact_manager/functions/globals.dart';
 import 'package:contact_manager/utils/appButton.dart';
@@ -117,7 +118,17 @@ class _AddRecipientPageState extends State<AddRecipientPage> {
         }, content: const Text('CANCEL')),
         AppButton(onPressedEvent: (){
           if (recipientPhoneNumber.text.isNotEmpty){
-            addContacts();
+            final contact = Contact(
+              recipientName: recipientName.text, 
+              recipientPhoneNumber: recipientPhoneNumber.text, 
+              recipientEmailAddress: recipientEmailAddress.text, 
+              recipientAddress: recipientAddress.text, 
+              recipientRelation: recipientRelation.text);
+            
+            setState(() {
+              Book().addContact(contact);  
+            });
+            
             Navigator.popAndPushNamed(context, '/homePage');
           } else {
             showEmptyFieldError(context);

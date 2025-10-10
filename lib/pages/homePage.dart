@@ -1,7 +1,12 @@
+import 'package:contact_manager/data/database.dart';
+import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/functions/func_barrel.dart';
 import 'package:contact_manager/utils/contactTile_copy.dart';
 import 'package:contact_manager/utils/listEmptyNotice.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -11,6 +16,10 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final Box<Contact> _data = Hive.box<Contact>('Contacts');
+
+  Book book = Book();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -21,37 +30,51 @@ class _HomepageState extends State<Homepage> {
           backgroundColor: defaultColor,
           actions: [
             IconButton(onPressed: (){
-              Navigator.popAndPushNamed(context, '/addRecipient');
+              Navigator.popAndPushNamed(context, '/addContactPage');
             }, icon: const Icon(Icons.add))
           ],
         ),
         body: Container(
           color: defaultBodyColor,
           padding: const EdgeInsets.all(10),
-          child: (contacts.isEmpty) ? EmptyListNotice( 
-            function: (){
-              Navigator.popAndPushNamed(context, '/addRecipient');
-            }) : ListView.builder(
+          child: ValueListenableBuilder(
+            valueListenable: _data.listenable(), 
+            builder: (context, box, _){
+              final contacts = box.values.toList().cast<Contact>();
+              if (contacts.isEmpty){
+                return EmptyListNotice(
+                  function: () {
+                    Navigator.popAndPushNamed(
+                      context, '/addContactPage');
+                  },);
+              }
+              return ListView.builder(
               itemCount: contacts.length, 
               itemBuilder: (context, index) {
+                final contact = contacts[index];
                 return ContactTile(
-                  recipientName: contacts[index]['name'], 
-                  recipientPhoneNumber: contacts[index]['phoneNumber'],
+                  contact: Contact(
+                    recipientName: contact.recipientName, 
+                    recipientPhoneNumber: contact.recipientPhoneNumber, 
+                    recipientEmailAddress: contact.recipientEmailAddress, 
+                    recipientAddress: contact.recipientAddress, 
+                    recipientRelation: contact.recipientRelation
+                  ),
                   index: index,
                   updateRecipientInfo: (index, modifiedData){
                     setState(() {
-                      updateContact(index, modifiedData);
+                      Book().updateContact(index, modifiedData);
                     });
                   },
                   deleteContactData: (){
-                    final contact = contacts[index];
                     setState(() {
-                      removeContact(contact);
+                      Book().deleteContact(index);
                     });
+                    
                   },
-
                 );
-              })
+              });
+            })
         ),
       ),
     );
