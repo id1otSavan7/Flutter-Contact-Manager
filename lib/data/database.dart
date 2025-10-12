@@ -1,4 +1,3 @@
-import 'package:contact_manager/functions/globals.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -12,12 +11,6 @@ class Book {
   Future<void> addContact(Contact contact) async {
     await _data.add(contact);
     print('Data has been added');
-
-    recipientName.clear();
-    recipientPhoneNumber.clear();
-    recipientEmailAddress.clear();
-    recipientAddress.clear();
-    recipientRelation.clear();
   }
 
   Future<void> updateContact(int index, Contact newContact) async {

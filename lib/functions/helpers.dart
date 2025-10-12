@@ -1,5 +1,8 @@
-import 'package:contact_manager/utils/appButton.dart';
+import 'package:contact_manager/data/models/Contact.dart';
+import 'package:contact_manager/functions/globals.dart';
+import 'package:contact_manager/utils/app_button.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 void testFunction(){
   print('Was Clicked!');
@@ -9,13 +12,13 @@ String? isDataNull(String? data, String fallback){
   return data!.trim().isEmpty ? fallback : data.trim();
 }
 
-void showEmptyFieldError(BuildContext context){
+void showErrorDialog(BuildContext context, String? title, String? msg){
   showDialog(
       context: context,
       builder: (BuildContext context){
         return AlertDialog(
-          title: const Text('TextField Left Empty...'),
-          content: const Text('It seems like the Recipient\'s Phone Number Field was left empty. Please fill it up with corresponding required data before saving.'),
+          title: Text(title!),
+          content: Text(msg!),
           actions: [
             AppButton(onPressedEvent: (){
               Navigator.pop(context);
@@ -24,5 +27,19 @@ void showEmptyFieldError(BuildContext context){
         );
       }
     );
+}
+
+bool phoneNumberExists(String phoneNumber) {
+  var box = Hive.box<Contact>('Contacts');
+  phoneNumber = phoneNumber.trim();
+  return box.values.any((contacts) => contacts.recipientPhoneNumber == phoneNumber);
+}
+
+void disposeControllerData() {
+  recipientName.clear();
+  recipientPhoneNumber.clear();
+  recipientEmailAddress.clear();
+  recipientAddress.clear();
+  recipientRelation.clear();
 }
 

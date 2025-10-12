@@ -1,5 +1,5 @@
 import 'package:contact_manager/functions/globals.dart';
-import 'package:contact_manager/utils/appButton.dart';
+import 'package:contact_manager/utils/app_button.dart';
 import 'package:flutter/material.dart';
 
 class EmptyListNotice extends StatelessWidget {

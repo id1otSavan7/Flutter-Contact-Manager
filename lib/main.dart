@@ -1,6 +1,8 @@
 import 'package:contact_manager/data/models/Contact.dart';
-import 'package:contact_manager/pages/addContactPage.dart';
-import 'package:contact_manager/pages/homePage.dart';
+import 'package:contact_manager/pages/add_contact_page.dart';
+import 'package:contact_manager/pages/home_page.dart';
+import 'package:contact_manager/pages/view_contact_page.dart';
+import 'package:contact_manager/pages/view_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
@@ -8,7 +10,7 @@ import 'package:hive_flutter/adapters.dart';
 
 
 void main() async {  
-  WidgetsFlutterBinding.ensureInitialized();
+  //WidgetsFlutterBinding.ensureInitialized();
   //Initialize our Hive/Local Storage
   await Hive.initFlutter();
 
@@ -18,14 +20,18 @@ void main() async {
 
   //Runs the execution of the Application
   runApp(
+
     MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const MyApp(),
       theme: ThemeData(useMaterial3: true),
       //Establish routes to navigate through several pages
+      initialRoute: '/home',
       routes: {
-        '/homePage':(context) => const Homepage(),
-        '/addContactPage':(context) => const AddRecipientPage(),
+        '/home':(context) => const Homepage(),
+        '/addContact':(context) => const AddRecipientPage(),
+        '/viewRecipient' : (context) => const ViewContactPage(),
+        '/viewProfile' : (context) => const ViewProfilePage(),
       },
     )
   );

@@ -1,8 +1,9 @@
 import 'package:contact_manager/data/models/Contact.dart';
-import 'package:contact_manager/functions/func_barrel.dart';
-import 'package:contact_manager/utils/appButton.dart';
+import 'package:contact_manager/functions/barrel.dart';
+import 'package:contact_manager/utils/app_button.dart';
+import 'package:contact_manager/utils/user_field_entry.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class ShowContactInfo extends StatefulWidget {
   final String? recipientName;
@@ -64,7 +65,22 @@ class _ShowContactInfoState extends State<ShowContactInfo> {
       );
       Navigator.pop(context, contact);
     } else {
-      showEmptyFieldError(context);
+      var box = Hive.box<Contact>('Contacts');
+            String title = '';
+            String msg = '';
+            bool ifItExists = box.values.any((contact) => contact.recipientPhoneNumber == recipientPhoneNumber.text);
+            if(ifItExists){
+              setState(() {
+                title = 'THE PHONE NUMBER ALREADY EXISTS';
+                msg = 'The Phone number you\'re trying to add, already exists in your book.';
+              });
+            } else {
+              setState(() {
+                title = 'AN IMPORTANT FIELD WAS LEFT EMPTY'; 
+                msg = 'Are you trying to add a contact? A contact info atleast must have a Phone Number...';  
+              }); 
+            }
+      showErrorDialog(context, title, msg);
     }
   }
 
@@ -121,79 +137,15 @@ class _ShowContactInfoState extends State<ShowContactInfo> {
                   const SizedBox(
                     height: 25,
                   ),
-
-                  //Recipient's Name
-                  TextField(
-                    controller: _recipientName,
-                    enabled: isBeingModified,
-                    keyboardType: TextInputType.name,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      label: Text('Recipient\'s Name'),
-                      prefixIcon: Icon(Icons.person),
-                      filled: true,
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
                   
-                  //Recipient's Phone Number
-                  TextField(
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(15),
-                    ],
-                    controller: _recipientPhoneNumber,
-                    enabled: isBeingModified,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      label: Text('Recipient\'s Phonenumber'),
-                      prefixIcon: Icon(Icons.phone),
-                      filled: true,
-                    ),
+                  UserEntryField(
+                    isBeingModified: isBeingModified, 
+                    name: _recipientName, 
+                    phoneNumber: _recipientPhoneNumber, 
+                    email: _recipientEmailAddress, 
+                    address: _recipientAddress, 
+                    relation: _recipientRelation
                   ),
-                  const SizedBox(height: 10,),
-                  
-                  //Recipient's eMail
-                  TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    controller: _recipientEmailAddress,
-                    enabled: isBeingModified,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      label: Text('Recipient\'s eMail'),
-                      prefixIcon: Icon(Icons.mail),
-                      filled: true,
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  
-                  //Recipient's Address
-                  TextField(
-                    keyboardType: TextInputType.streetAddress,
-                    controller: _recipientAddress,
-                    enabled: isBeingModified,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      label: Text('Recipient\'s Home Address'),
-                      prefixIcon: Icon(Icons.home),
-                      filled: true,
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  
-                  //Recipient's Relationship
-                  TextField(
-                    keyboardType: TextInputType.text,
-                    controller: _recipientRelation,
-                    enabled: isBeingModified,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      label: Text('Recipient\'s Relationship'),
-                      prefixIcon: Icon(Icons.group),
-                      filled: true,
-                ),
-              ),
               
               SizedBox(height: (isBeingModified) ? 100 : 50,),
               

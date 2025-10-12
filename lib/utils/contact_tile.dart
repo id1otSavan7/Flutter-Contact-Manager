@@ -1,6 +1,6 @@
 import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/functions/globals.dart';
-import 'package:contact_manager/utils/showContactInfo.dart';
+import 'package:contact_manager/utils/show_contact_info.dart';
 import 'package:flutter/material.dart';
 
 class ContactTile extends StatefulWidget {
@@ -60,7 +60,7 @@ class _ContactTileState extends State<ContactTile> {
         title: Text(widget.contact!.recipientName ?? 'Unknown Recipient'),
         subtitle: Text(widget.contact!.recipientPhoneNumber ?? ''),
         onTap: () {
-          showContactInfo();
+          Navigator.popAndPushNamed(context, '/viewContact');
         },
       ),
     );
