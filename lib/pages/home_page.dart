@@ -92,17 +92,7 @@ class _HomepageState extends State<Homepage> {
                     recipientRelation: contact.recipientRelation
                   ),
                   index: index,
-                  updateRecipientInfo: (index, modifiedData){
-                    setState(() {
-                      Book().updateContact(index, modifiedData);
-                    });
-                  },
-                  deleteContactData: (){
-                    setState(() {
-                      Book().deleteContact(index);
-                    });
-                    
-                  },
+                  isBeingModified: false,
                 );
               });
             })

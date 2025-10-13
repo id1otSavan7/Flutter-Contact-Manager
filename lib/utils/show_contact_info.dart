@@ -100,80 +100,10 @@ class _ShowContactInfoState extends State<ShowContactInfo> {
                 width: (isBeingModified) ? 150 :25 ,
                 height: (isBeingModified) ? 35 : 0,
               ),
-              if (!isBeingModified) ...[
-                Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CircularAppButton(onPressedEvent: (){
-                    setState(() {
-                      isBeingModified = !isBeingModified;
-                    });
-                  }, content: const Icon(Icons.edit)),
-                  CircularAppButton(onPressedEvent: (){
-                    Navigator.pop(context, 'delete');
-                  }, content: const Icon(Icons.delete))
-                ],
-                )
-              ]
-
             ],
           ),
           children: [
-            Container(
-              color: defaultColor,
-              padding: const EdgeInsets.all(30),
-              child: Column(
-                children: [
-                  const Center(
-                    child: SizedBox(
-                      height: 75,
-                      width: 75,
-                      child: CircleAvatar(
-                        child: Icon(Icons.person),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  
-                  UserEntryField(
-                    isBeingModified: isBeingModified, 
-                    name: _recipientName, 
-                    phoneNumber: _recipientPhoneNumber, 
-                    email: _recipientEmailAddress, 
-                    address: _recipientAddress, 
-                    relation: _recipientRelation
-                  ),
-              
-              SizedBox(height: (isBeingModified) ? 100 : 50,),
-              
-              (!isBeingModified) ?
-              Center(
-                child: SizedBox(
-                  height: 75,
-                  width: 75,
-                  child: CircularAppButton(
-                    onPressedEvent: (){}, 
-                    content: const Icon(Icons.phone)),
-                ),
-              ) : Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  AppButton(onPressedEvent: (){
-                    setState(() {
-                      isBeingModified = false;
-                    });
-                  }, content: const Text('CANCEL')),
-                  AppButton(onPressedEvent: (){
-                    submitModifiedData();
-                  }, content: const Text('SAVE')),
-                ],
-              )
-            ],
-          ),
-        )
+            
       ],
     );
   }

@@ -26,11 +26,9 @@ void main() async {
       home: const MyApp(),
       theme: ThemeData(useMaterial3: true),
       //Establish routes to navigate through several pages
-      initialRoute: '/home',
       routes: {
         '/home':(context) => const Homepage(),
         '/addContact':(context) => const AddRecipientPage(),
-        '/viewRecipient' : (context) => const ViewContactPage(),
         '/viewProfile' : (context) => const ViewProfilePage(),
       },
     )
