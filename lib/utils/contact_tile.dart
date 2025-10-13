@@ -1,6 +1,7 @@
 import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/functions/globals.dart';
 import 'package:contact_manager/pages/view_contact_page.dart';
+import 'package:contact_manager/utils/profile.dart';
 import 'package:flutter/material.dart';
 
 class ContactTile extends StatefulWidget {
@@ -28,11 +29,7 @@ class _ContactTileState extends State<ContactTile> {
         ),
       color: defaultColor,
       child: ListTile(
-        leading: const CircleAvatar(
-          child: Center(
-            child: Icon(Icons.person),
-          ),
-        ),
+        leading: ContactProfile(name: widget.contact!.recipientName),
         title: Text(widget.contact!.recipientName ?? 'Unknown Recipient'),
         subtitle: Text(widget.contact!.recipientPhoneNumber ?? ''),
         onTap: () {

@@ -1,6 +1,7 @@
 import 'package:contact_manager/data/database.dart';
 import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/functions/globals.dart';
+import 'package:contact_manager/functions/helpers.dart';
 import 'package:contact_manager/utils/contact_tile.dart';
 import 'package:contact_manager/utils/emptylist_notice.dart';
 import 'package:flutter/material.dart';
@@ -24,13 +25,28 @@ class _HomepageState extends State<Homepage> {
       '/home',
       '/viewProfile',
   ];
-
   void _navigateToPages(int index) {
     if(_selectedIndex != index){
       setState(() {
         _selectedIndex = index;
       });
       Navigator.popAndPushNamed(context, _routes[_selectedIndex]);
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    bool ifItExists = phoneNumberExists('911');
+    if(!ifItExists){
+      Book().addContact(Contact(
+        recipientName: 'Emergency Line', 
+        recipientPhoneNumber: '911', 
+        recipientEmailAddress: 'No data recorded.', 
+        recipientAddress: 'No data recorded.', 
+        recipientRelation: 'No data recorded.'
+      ));
     }
   }
 

@@ -1,7 +1,6 @@
 import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/pages/add_contact_page.dart';
 import 'package:contact_manager/pages/home_page.dart';
-import 'package:contact_manager/pages/view_contact_page.dart';
 import 'package:contact_manager/pages/view_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';

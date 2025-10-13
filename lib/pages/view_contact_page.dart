@@ -1,9 +1,11 @@
+import 'package:contact_manager/utils/profile.dart';
 import 'package:flutter/material.dart';
 import '../data/database.dart';
 import '../data/models/Contact.dart';
 import '../functions/barrel.dart';
 import '../utils/app_button.dart';
 import '../utils/user_field_entry.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class ViewContactPage extends StatefulWidget {
@@ -86,6 +88,25 @@ class _ViewContactPageState extends State<ViewContactPage> {
     disposeControllerData();
 
   }
+
+  Future<void> makePhoneCall(String? contactNumber) async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: contactNumber);
+    if (await canLaunchUrl(phoneUri)){
+      await launchUrl(phoneUri);
+    } else {
+      showDialog(context: context, builder: (BuildContext context){
+        return AlertDialog(
+          title: const Text('SOMETHING WENT WRONG...'),
+          content: const Text('Unable to make a call, something went wrong.'),
+          actions: [
+            AppButton(onPressedEvent: (){
+              Navigator.pop(context);
+            }, content: const Text('O K A Y '))
+          ],
+        );
+      });
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -129,13 +150,11 @@ class _ViewContactPageState extends State<ViewContactPage> {
           padding: const EdgeInsets.all(30),
           child: Column(
             children: [
-              const Center(
+              Center(
                 child: SizedBox(
                   height: 75,
                   width: 75,
-                  child: CircleAvatar(
-                    child: Icon(Icons.person),
-                  ),
+                  child: ContactProfile(name: widget.recipientName),
                 ),
               ),
 
@@ -160,7 +179,9 @@ class _ViewContactPageState extends State<ViewContactPage> {
                   height: 75,
                   width: 75,
                   child: CircularAppButton(
-                    onPressedEvent: (){}, 
+                    onPressedEvent: (){
+                      makePhoneCall(widget.recipientPhoneNumber);
+                    }, 
                     content: const Icon(Icons.phone)),
                 ),
               ) : Row(
