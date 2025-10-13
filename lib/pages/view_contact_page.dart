@@ -5,9 +5,10 @@ import '../functions/barrel.dart';
 import '../utils/app_button.dart';
 import '../utils/user_field_entry.dart';
 
+// ignore: must_be_immutable
 class ViewContactPage extends StatefulWidget {
   final int index;
-  bool isBeingModified;
+  late bool isBeingModified;
   final String? recipientName;
   final String? recipientPhoneNumber;
   final String? recipientEmailAddress;
@@ -82,7 +83,6 @@ class _ViewContactPageState extends State<ViewContactPage> {
     setState(() {
       Book().deleteContact(index);
     });
-    Navigator.popAndPushNamed(context, '/home');
     disposeControllerData();
 
   }
@@ -114,6 +114,8 @@ class _ViewContactPageState extends State<ViewContactPage> {
                       }, content: const Text('CANCEL')),
                       AppButton(onPressedEvent: (){
                         deleteContactData(widget.index);
+                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, "/home");
                       }, content: const Text('CONFIRM')),
                     ],
                   );

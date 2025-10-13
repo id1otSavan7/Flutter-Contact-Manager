@@ -1,15 +1,14 @@
 import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/functions/globals.dart';
 import 'package:contact_manager/pages/view_contact_page.dart';
-import 'package:contact_manager/utils/show_contact_info.dart';
 import 'package:flutter/material.dart';
 
 class ContactTile extends StatefulWidget {
   final Contact? contact;
   final int index;
-  bool isBeingModified;
+  final bool isBeingModified;
 
-  ContactTile({
+  const ContactTile({
     super.key,
     required this.contact,
     required this.index,
