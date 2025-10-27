@@ -10,7 +10,7 @@ class ViewProfilePage extends StatefulWidget {
 class _ViewProfilePageState extends State<ViewProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: const Text('P R O F I L E '),
         leading: IconButton(onPressed: (){
@@ -18,9 +18,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
         }, icon: const Icon(Icons.arrow_back_ios_new)),
         actions: const [],
       ),
-      body: Column(
-        children: [],
+      body: SafeArea(
+        child: Column(
+          children: [],
+        ),
       ),
-    ));
+    );
   }
 }

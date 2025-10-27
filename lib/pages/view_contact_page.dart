@@ -110,42 +110,42 @@ class _ViewContactPageState extends State<ViewContactPage> {
   
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('C O N T A C T   I N F O '),
-          leading: IconButton(onPressed: (){
-            Navigator.popAndPushNamed(context, '/home');
-          }, icon: const Icon(Icons.arrow_back_ios_new)),
-          actions: [
-            if (!widget.isBeingModified) ...[
-              CircularAppButton(onPressedEvent: (){
-                setState(() {
-                  widget.isBeingModified = !widget.isBeingModified;
-                });
-              }, content: const Icon(Icons.edit)),
-              CircularAppButton(onPressedEvent: (){
-                showDialog(context: context, builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('REMOVE CONTACT DATA?'),
-                    content: const Text('You are currently attempting to remove this data, are you sure about this?'),
-                    actions: [
-                      AppButton(onPressedEvent: (){
-                        Navigator.pop(context);
-                      }, content: const Text('CANCEL')),
-                      AppButton(onPressedEvent: (){
-                        deleteContactData(widget.index);
-                        Navigator.pop(context);
-                        Navigator.popAndPushNamed(context, "/home");
-                      }, content: const Text('CONFIRM')),
-                    ],
-                  );
-                });
-              }, content: const Icon(Icons.delete))
-            ]
-          ],
-        ),
-        body: Container(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('C O N T A C T   I N F O '),
+        leading: IconButton(onPressed: (){
+          Navigator.popAndPushNamed(context, '/home');
+        }, icon: const Icon(Icons.arrow_back_ios_new)),
+        actions: [
+          if (!widget.isBeingModified) ...[
+            CircularAppButton(onPressedEvent: (){
+              setState(() {
+                widget.isBeingModified = !widget.isBeingModified;
+              });
+            }, content: const Icon(Icons.edit)),
+            CircularAppButton(onPressedEvent: (){
+              showDialog(context: context, builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('REMOVE CONTACT DATA?'),
+                  content: const Text('You are currently attempting to remove this data, are you sure about this?'),
+                  actions: [
+                    AppButton(onPressedEvent: (){
+                      Navigator.pop(context);
+                    }, content: const Text('CANCEL')),
+                    AppButton(onPressedEvent: (){
+                      deleteContactData(widget.index);
+                      Navigator.pop(context);
+                      Navigator.popAndPushNamed(context, "/home");
+                    }, content: const Text('CONFIRM')),
+                  ],
+                );
+              });
+            }, content: const Icon(Icons.delete))
+          ]
+        ],
+      ),
+      body: SafeArea(
+        child: Container(
           color: defaultColor,
           padding: const EdgeInsets.all(30),
           child: Column(
@@ -157,7 +157,7 @@ class _ViewContactPageState extends State<ViewContactPage> {
                   child: ContactProfile(name: widget.recipientName),
                 ),
               ),
-
+            
               const SizedBox(
                 height: 25,
               ),
@@ -199,8 +199,8 @@ class _ViewContactPageState extends State<ViewContactPage> {
               )
             ],
           ),
-        )
-      ),
+        ),
+      )
     );
   }
 }

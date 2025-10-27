@@ -7,6 +7,8 @@ class Book {
   //Reference for our Hive Box that is opened in main.dart
   final Box<Contact> _data = Hive.box<Contact>('Contacts');
 
+  List<Contact> contacts = [];
+
   //Function to add new contact in the hive.
   Future<void> addContact(Contact contact) async {
     await _data.add(contact);
@@ -32,9 +34,10 @@ class Book {
   }
 
   //Function to read contacts that is stored in the hive.
-  Contact? fetchContactData(int index) {
+  List<Contact>? fetchContactData(int index) {
     if (_data.isNotEmpty){
-      return _data.getAt(index);
+      contacts = _data.values.toList();
+      return contacts;
     }
     return null;
   }

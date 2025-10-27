@@ -52,42 +52,43 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: defaultBodyColor,
-        appBar: AppBar(
-          title: const Text('C O N T A C T S'),
-          elevation: 0,
-          backgroundColor: defaultColor,
-          actions: [
-            IconButton(onPressed: (){}, icon: const Icon(Icons.search)),
-            IconButton(onPressed: (){}, icon: const Icon(Icons.settings))
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex:  _selectedIndex,
-          onTap: _navigateToPages,
-          items: const [
-            //Page Route: Home
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add),
-              label: 'ADD CONTACT'
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt),
-              label: 'CONTACTS'
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'PROFILE'
-            ),
-          ]),
-        body: Container(
+    return Scaffold(
+      backgroundColor: defaultBodyColor,
+      appBar: AppBar(
+        title: const Text('C O N T A C T S'),
+        elevation: 0,
+        backgroundColor: defaultColor,
+        actions: [
+          IconButton(onPressed: (){}, icon: const Icon(Icons.search)),
+          IconButton(onPressed: (){}, icon: const Icon(Icons.settings))
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex:  _selectedIndex,
+        onTap: _navigateToPages,
+        items: const [
+          //Page Route: Home
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'ADD CONTACT'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt),
+            label: 'CONTACTS'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'PROFILE'
+          ),
+        ]),
+      body: SafeArea(
+        child: Container(
           padding: const EdgeInsets.all(20),
           child: ValueListenableBuilder(
             valueListenable: _data.listenable(), 
             builder: (context, box, _){
-              final contacts = box.values.toList().cast<Contact>();
+              List<Contact> contacts = box.values.toList().cast<Contact>();
+              contacts.sort((a, b) => a.recipientName!.toLowerCase().compareTo(b.recipientName!.toLowerCase()));
               if (contacts.isEmpty){
                 return EmptyListNotice(
                   function: () {

@@ -23,7 +23,7 @@ void main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const MyApp(),
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(useMaterial3: false),
       //Establish routes to navigate through several pages
       routes: {
         '/home':(context) => const Homepage(),

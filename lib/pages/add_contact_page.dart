@@ -16,35 +16,38 @@ class AddRecipientPage extends StatefulWidget {
 class _AddRecipientPageState extends State<AddRecipientPage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(
+    return Scaffold(
       backgroundColor: defaultBodyColor,
       appBar: AppBar(
         title: const Text('A D D   I N F O'),
         backgroundColor: defaultColor,
       ),
-      body: Container(
-        height: 400,
-        margin: const EdgeInsets.all(50),
-        padding: const EdgeInsets.all(25),
-        decoration: BoxDecoration(
-          color: defaultColor,
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.grey,
-              spreadRadius: 15,
-              blurRadius: 15,
-              offset: Offset(0, 15)
-            )
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          height: 380,
+          width:  380*2,
+          margin: const EdgeInsets.fromLTRB(25, 50, 25, 50),
+          padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
+          decoration: BoxDecoration(
+            color: defaultColor,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                spreadRadius: 15,
+                blurRadius: 15,
+                offset: Offset(0, 15)
+              )
+            ],
+          ),
+          child: UserEntryField(
+            isBeingModified: false,
+            name: recipientName, 
+            phoneNumber: recipientPhoneNumber, 
+            email: recipientEmailAddress, 
+            address: recipientAddress, 
+            relation: recipientRelation)
         ),
-        child: UserEntryField(
-          isBeingModified: false,
-          name: recipientName, 
-          phoneNumber: recipientPhoneNumber, 
-          email: recipientEmailAddress, 
-          address: recipientAddress, 
-          relation: recipientRelation)
       ),
       persistentFooterButtons: [
         AppButton(onPressedEvent: (){
@@ -53,7 +56,7 @@ class _AddRecipientPageState extends State<AddRecipientPage> {
         }, content: const Text('CANCEL')),
         AppButton(onPressedEvent: (){
           bool itExists = phoneNumberExists(recipientPhoneNumber.text);
-
+    
           if (recipientPhoneNumber.text.isEmpty){
             showErrorDialog(
               context, 
@@ -81,6 +84,6 @@ class _AddRecipientPageState extends State<AddRecipientPage> {
           }       
         }, content: const Text('SAVE')),
       ],
-    ));
+    );
   }
 }
