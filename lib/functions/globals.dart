@@ -9,12 +9,5 @@ TextEditingController recipientEmailAddress = TextEditingController();
 TextEditingController recipientAddress = TextEditingController();
 TextEditingController recipientRelation = TextEditingController();
 
-final int _selectedIndex = 0;
-
-final List<String> _routes = [
-    '/home',
-    '/addContact',
-    '/viewContact',
-    '/viewProfile',
-    '/settings',
-];
+TextEditingController searchController = TextEditingController();
+String searchQuerry = '';

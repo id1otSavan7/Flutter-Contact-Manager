@@ -144,7 +144,7 @@ class _ViewContactPageState extends State<ViewContactPage> {
           ]
         ],
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Container(
           color: defaultColor,
           padding: const EdgeInsets.all(30),

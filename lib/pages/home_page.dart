@@ -18,7 +18,9 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   final Box<Contact> _data = Hive.box<Contact>('Contacts');
   Book book = Book();
-
+  TextEditingController searchController = TextEditingController();
+  bool isSearching = false;
+  String searchQuery = '';
   int _selectedIndex = 1;
   final List<String> _routes = [
       '/addContact',
@@ -41,13 +43,38 @@ class _HomepageState extends State<Homepage> {
     bool ifItExists = phoneNumberExists('911');
     if(!ifItExists){
       Book().addContact(Contact(
-        recipientName: 'Emergency Line', 
+        recipientName: '**Emergency-Line**', 
         recipientPhoneNumber: '911', 
         recipientEmailAddress: 'No data recorded.', 
         recipientAddress: 'No data recorded.', 
         recipientRelation: 'No data recorded.'
       ));
     }
+  }
+  
+  Widget BuildSearchBar(BuildContext context){
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: defaultColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TextField(
+      controller: searchController,
+      decoration: InputDecoration(
+        label: const Text('Search'),
+        prefixIcon: const Icon(Icons.search),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+        )
+      ),
+      onChanged: (value) {
+        setState(() {
+          searchQuery = value.toLowerCase();
+        });
+      },
+    ),
+    );
   }
 
   @override
@@ -56,10 +83,18 @@ class _HomepageState extends State<Homepage> {
       backgroundColor: defaultBodyColor,
       appBar: AppBar(
         title: const Text('C O N T A C T S'),
-        elevation: 0,
         backgroundColor: defaultColor,
         actions: [
-          IconButton(onPressed: (){}, icon: const Icon(Icons.search)),
+          //Searching
+          IconButton(onPressed: (){
+            setState(() {
+              isSearching = !isSearching;
+              searchQuery = '';
+              searchController.clear();
+            });
+          }, icon: (!isSearching) ? const Icon(Icons.search) : const Icon(Icons.close)),
+        
+          //Modify Settings
           IconButton(onPressed: (){}, icon: const Icon(Icons.settings))
         ],
       ),
@@ -84,35 +119,55 @@ class _HomepageState extends State<Homepage> {
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(20),
-          child: ValueListenableBuilder(
-            valueListenable: _data.listenable(), 
-            builder: (context, box, _){
-              List<Contact> contacts = box.values.toList().cast<Contact>();
-              contacts.sort((a, b) => a.recipientName!.toLowerCase().compareTo(b.recipientName!.toLowerCase()));
-              if (contacts.isEmpty){
-                return EmptyListNotice(
-                  function: () {
-                    Navigator.popAndPushNamed(
-                      context, '/addContact');
-                  },);
-              }
-              return ListView.builder(
-              itemCount: contacts.length, 
-              itemBuilder: (context, index) {
-                final contact = contacts[index];
-                return ContactTile(
-                  contact: Contact(
-                    recipientName: contact.recipientName, 
-                    recipientPhoneNumber: contact.recipientPhoneNumber, 
-                    recipientEmailAddress: contact.recipientEmailAddress, 
-                    recipientAddress: contact.recipientAddress, 
-                    recipientRelation: contact.recipientRelation
+          child:
+              Column(
+                children: [
+                  if (isSearching) ...[
+                    BuildSearchBar(context),
+                    const SizedBox(height: 10),
+                  ],
+                  Expanded(
+                    child: ValueListenableBuilder(
+                      valueListenable: _data.listenable(), 
+                      builder: (context, box, _){
+                        List<Contact> contacts = box.values.toList().cast<Contact>();
+                        contacts.sort((a, b) => a.recipientName!.toLowerCase().compareTo(b.recipientName!.toLowerCase()));
+                        if (contacts.isEmpty){
+                          return EmptyListNotice(
+                            function: () {
+                              Navigator.popAndPushNamed(
+                                context, '/addContact');
+                            },);
+                        }
+                        if(searchQuery.isNotEmpty){
+                          contacts = contacts.where((contact) {
+                            final name = contact.recipientName?.toLowerCase() ?? '';
+                            final phoneNumber = contact.recipientPhoneNumber ?? '';
+                            final email = contact.recipientEmailAddress?.toLowerCase() ?? '';
+                            return name.contains(searchQuery) || phoneNumber.contains(searchQuery) || email.contains(searchQuery);
+                          }).toList();
+                        }
+                        return ListView.builder(
+                        itemCount: contacts.length, 
+                        itemBuilder: (context, index) {
+                          final contact = contacts[index];
+                          
+                          return ContactTile(
+                            contact: Contact(
+                              recipientName: contact.recipientName, 
+                              recipientPhoneNumber: contact.recipientPhoneNumber, 
+                              recipientEmailAddress: contact.recipientEmailAddress, 
+                              recipientAddress: contact.recipientAddress, 
+                              recipientRelation: contact.recipientRelation
+                            ),
+                            index: index,
+                            isBeingModified: false,
+                          );
+                        });
+                      }),
                   ),
-                  index: index,
-                  isBeingModified: false,
-                );
-              });
-            })
+                ],
+              ),
         ),
       ),
     );
