@@ -19,6 +19,7 @@ class _ContactProfileState extends State<ContactProfile> {
     if(name == null || name == 'Unknown Recipient' || name.trim().isEmpty){
       return '?';
     } else {
+      name = name.replaceAll(RegExp(r'[!@#\$%^&*()_+={}\[\]|\\:;"<>,.?/~`]'), ' ');
       initial = name.trim().split(RegExp(r'\s+'));
       if (initial.length == 1){
         return initial[0][0].toUpperCase();

@@ -26,3 +26,29 @@ class Contact extends HiveObject {
     required this.recipientRelation,
   });
 }
+
+@HiveType(typeId: 1)
+class MyContact extends HiveObject {
+  @HiveField(0)
+  String? myName;
+  
+  @HiveField(1)
+  String? myFirstPhoneNumber;
+
+  @HiveField(2)
+  String? mySecondPhoneNumber;
+
+  @HiveField(3)
+  String? myEmailAddress;
+
+  @HiveField(4)
+  String? myHomeAddress;
+
+  MyContact({
+    required this.myName,
+    required this.myFirstPhoneNumber,
+    required this.mySecondPhoneNumber,
+    required this.myEmailAddress,
+    required this.myHomeAddress,
+  });
+}

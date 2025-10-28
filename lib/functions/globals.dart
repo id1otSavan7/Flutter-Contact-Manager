@@ -9,5 +9,8 @@ TextEditingController recipientEmailAddress = TextEditingController();
 TextEditingController recipientAddress = TextEditingController();
 TextEditingController recipientRelation = TextEditingController();
 
-TextEditingController searchController = TextEditingController();
-String searchQuerry = '';
+TextEditingController myName = TextEditingController();
+TextEditingController myFirstPhoneNumber = TextEditingController();
+TextEditingController mySecondPhoneNumber = TextEditingController();
+TextEditingController myEmailAddress = TextEditingController();
+TextEditingController myHomeAddress = TextEditingController();

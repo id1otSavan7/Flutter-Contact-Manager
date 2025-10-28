@@ -41,3 +41,18 @@ class CircularAppButton extends StatelessWidget {
     );
   }
 }
+
+class AppIconButton extends StatelessWidget {
+  final VoidCallback? onPressedEvent;
+  final Widget content;
+  const AppIconButton({
+    super.key,
+    required this.onPressedEvent,
+    required this.content,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(onPressed: onPressedEvent, icon: content);
+  }
+}

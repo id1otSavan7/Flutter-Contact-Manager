@@ -4,6 +4,7 @@ import 'package:contact_manager/functions/globals.dart';
 import 'package:contact_manager/functions/helpers.dart';
 import 'package:contact_manager/utils/contact_tile.dart';
 import 'package:contact_manager/utils/emptylist_notice.dart';
+import 'package:contact_manager/utils/personal_contact_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -16,7 +17,9 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  final Box<Contact> _data = Hive.box<Contact>('Contacts');
+  final Box<Contact> data = Hive.box<Contact>('Contacts');
+  final Box<MyContact> myData = Hive.box<MyContact>('MyContacts');
+  MyContact? myInfo;
   Book book = Book();
   TextEditingController searchController = TextEditingController();
   bool isSearching = false;
@@ -40,6 +43,7 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    myInfo = book.fetchPersonalData();
     bool ifItExists = phoneNumberExists('911');
     if(!ifItExists){
       Book().addContact(Contact(
@@ -52,7 +56,7 @@ class _HomepageState extends State<Homepage> {
     }
   }
   
-  Widget BuildSearchBar(BuildContext context){
+  Widget buildSearchBar(BuildContext context){
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -121,14 +125,25 @@ class _HomepageState extends State<Homepage> {
           padding: const EdgeInsets.all(20),
           child:
               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (isSearching) ...[
-                    BuildSearchBar(context),
+                    buildSearchBar(context),
                     const SizedBox(height: 10),
                   ],
+                  if(myData.isNotEmpty && !isSearching) ...[
+                    const Text("My Profile"),
+                    PersonalContactTile(
+                      name: myInfo?.myName, 
+                      activePhoneNumber: myInfo?.myFirstPhoneNumber,
+                    ),
+                    const SizedBox(height: 10,)
+                  ],
+                  const Text("Contact List"),
                   Expanded(
                     child: ValueListenableBuilder(
-                      valueListenable: _data.listenable(), 
+                      valueListenable: data.listenable(), 
                       builder: (context, box, _){
                         List<Contact> contacts = box.values.toList().cast<Contact>();
                         contacts.sort((a, b) => a.recipientName!.toLowerCase().compareTo(b.recipientName!.toLowerCase()));
