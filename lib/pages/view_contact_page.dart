@@ -118,12 +118,12 @@ class _ViewContactPageState extends State<ViewContactPage> {
         }, icon: const Icon(Icons.arrow_back_ios_new)),
         actions: [
           if (!widget.isBeingModified) ...[
-            CircularAppButton(onPressedEvent: (){
+            AppIconButton(onPressedEvent: (){
               setState(() {
                 widget.isBeingModified = !widget.isBeingModified;
               });
             }, content: const Icon(Icons.edit)),
-            CircularAppButton(onPressedEvent: (){
+            AppIconButton(onPressedEvent: (){
               showDialog(context: context, builder: (BuildContext context) {
                 return AlertDialog(
                   title: const Text('REMOVE CONTACT DATA?'),

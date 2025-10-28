@@ -8,6 +8,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 
+/*
+Next Update we can do...
+- Add Settings
+- Grid View Quick Calls
+*/
 
 void main() async {  
   //WidgetsFlutterBinding.ensureInitialized();
