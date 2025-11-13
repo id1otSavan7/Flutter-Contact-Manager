@@ -5,7 +5,9 @@ import '../data/models/Contact.dart';
 import '../functions/barrel.dart';
 import '../utils/app_button.dart';
 import '../utils/user_field_entry.dart';
-import 'package:url_launcher/url_launcher.dart';
+//import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // ignore: must_be_immutable
 class ViewContactPage extends StatefulWidget {
@@ -88,7 +90,7 @@ class _ViewContactPageState extends State<ViewContactPage> {
     disposeControllerData();
 
   }
-
+  /*
   Future<void> makePhoneCall(String? contactNumber) async {
     final Uri phoneUri = Uri(scheme: 'tel', path: contactNumber);
     if (await canLaunchUrl(phoneUri)){
@@ -105,6 +107,22 @@ class _ViewContactPageState extends State<ViewContactPage> {
           ],
         );
       });
+    }
+  }
+  */
+
+  Future<void> makePhoneCall(String? contactNumber) async {
+    var status = await Permission.phone.status;
+    if(!status.isGranted){
+      status = await Permission.phone.request();
+    } 
+
+    if(status.isGranted){
+      await FlutterPhoneDirectCaller.callNumber(contactNumber!);
+    } else {
+      showErrorDialog(context, 
+      "Something went Wrong...", 
+      "Permission was denied to make calls");
     }
   }
   
