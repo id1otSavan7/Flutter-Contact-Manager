@@ -1,18 +1,12 @@
 import 'package:contact_manager/data/models/Contact.dart';
-import 'package:contact_manager/pages/add_contact_page.dart';
-import 'package:contact_manager/pages/home_page.dart';
-import 'package:contact_manager/pages/splash_screen.dart';
-import 'package:contact_manager/pages/view_profile_page.dart';
+import 'package:contact_manager/pages/screens/add_contact_page.dart';
+import 'package:contact_manager/pages/screens/home_page.dart';
+import 'package:contact_manager/pages/splash/splash_screen.dart';
+import 'package:contact_manager/pages/screens/view_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
-
-/*
-Next Update we can do...
-- Add Settings
-- Grid View Quick Calls
-*/
 
 void main() async {  
   //WidgetsFlutterBinding.ensureInitialized();
@@ -21,9 +15,11 @@ void main() async {
 
   Hive.registerAdapter(ContactAdapter());
   Hive.registerAdapter(MyContactAdapter());
+  Hive.registerAdapter(QuickCallListAdapter());
   //Open the Hive Container
   await Hive.openBox<Contact>('Contacts');
   await Hive.openBox<MyContact>('MyContacts');
+  await Hive.openBox<QuickCallList>('QuickCalls');
 
   //Runs the execution of the Application
   runApp(

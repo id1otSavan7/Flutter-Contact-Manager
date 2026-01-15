@@ -52,3 +52,17 @@ class MyContact extends HiveObject {
     required this.myHomeAddress,
   });
 }
+
+@HiveType(typeId: 2)
+class QuickCallList {
+  @HiveField(0)
+  String? contactName;
+  
+  @HiveField(1)
+  String? contactNumber;
+
+  QuickCallList({
+    required this.contactName,
+    required this.contactNumber,
+  });
+}

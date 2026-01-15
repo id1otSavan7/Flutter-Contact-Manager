@@ -2,18 +2,20 @@ import 'package:contact_manager/data/database.dart';
 import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/functions/helpers.dart';
 import 'package:contact_manager/functions/globals.dart';
-import 'package:contact_manager/utils/app_button.dart';
-import 'package:contact_manager/utils/user_field_entry.dart';
+import 'package:contact_manager/utils/widgets/app_button.dart';
+import 'package:contact_manager/utils/widgets/field_entry/user_field_entry.dart';
 import 'package:flutter/material.dart';
 
 class AddRecipientPage extends StatefulWidget {
-  const AddRecipientPage({super.key});
+  const AddRecipientPage({super.key,});
 
   @override
   State<AddRecipientPage> createState() => _AddRecipientPageState();
 }
 
 class _AddRecipientPageState extends State<AddRecipientPage> {
+  RecipientData record = RecipientData();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +79,7 @@ class _AddRecipientPageState extends State<AddRecipientPage> {
               recipientAddress: isDataNull(recipientAddress.text, 'No data recorded.'), 
               recipientRelation: isDataNull(recipientRelation.text, 'No data recorded.'),);
             setState(() {
-              Book().addContact(contact);  
+              record.addContact(contact);  
             });
             Navigator.popAndPushNamed(context, '/home');  
             disposeControllerData();

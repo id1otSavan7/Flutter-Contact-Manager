@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ContactProfile extends StatefulWidget {
+  final double? radius;
   final String? name;
 
   const ContactProfile({
     super.key,
+    required this.radius,
     required this.name,
     });
 
@@ -32,6 +34,7 @@ class _ContactProfileState extends State<ContactProfile> {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
+      radius: widget.radius,
       child: 
       (getContactInitials(widget.name) == '?') ? 
         const Icon(Icons.person) : 

@@ -1,5 +1,5 @@
 import 'package:contact_manager/functions/globals.dart';
-import 'package:contact_manager/utils/profile.dart';
+import 'package:contact_manager/utils/widgets/profile.dart';
 import 'package:flutter/material.dart';
 
 class PersonalContactTile extends StatefulWidget {
@@ -25,7 +25,7 @@ class _PersonalContactTileState extends State<PersonalContactTile> {
         ),
       color: defaultColor,
       child: ListTile(
-        leading: ContactProfile(name: widget.name),
+        leading: ContactProfile(name: widget.name, radius: 20,),
         title: Text(widget.name ?? 'Unknown Recipient'),
         subtitle: Text(widget.activePhoneNumber ?? ''),
         onTap: () {

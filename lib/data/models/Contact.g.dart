@@ -97,3 +97,40 @@ class MyContactAdapter extends TypeAdapter<MyContact> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class QuickCallListAdapter extends TypeAdapter<QuickCallList> {
+  @override
+  final int typeId = 2;
+
+  @override
+  QuickCallList read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return QuickCallList(
+      contactName: fields[0] as String?,
+      contactNumber: fields[1] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, QuickCallList obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.contactName)
+      ..writeByte(1)
+      ..write(obj.contactNumber);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is QuickCallListAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

@@ -1,10 +1,9 @@
 import 'package:contact_manager/data/database.dart';
 import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/functions/barrel.dart';
-import 'package:contact_manager/utils/app_button.dart';
-import 'package:contact_manager/utils/personal_field_entry.dart';
+import 'package:contact_manager/utils/widgets/app_button.dart';
+import 'package:contact_manager/utils/widgets/field_entry/personal_field_entry.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 
 class ViewProfilePage extends StatefulWidget {
   const ViewProfilePage({
@@ -15,15 +14,16 @@ class ViewProfilePage extends StatefulWidget {
 }
 
 class _ViewProfilePageState extends State<ViewProfilePage> {
-  final Box<MyContact> myData = Hive.box<MyContact>('MyContacts');
+  PersonalData myRecord = PersonalData();
+
   bool isBeingModified = true;
 
   
   @override
   void initState() {
     super.initState();
-    if(myData.isEmpty) setState(() => isBeingModified = false); 
-    MyContact? data = Book().fetchPersonalData();
+    if(myRecord.isFilled) setState(() => isBeingModified = false); 
+    MyContact? data = myRecord.fetchPersonalData();
     myName = TextEditingController(text: data?.myName ?? '');
     myFirstPhoneNumber = TextEditingController(text: data?.myFirstPhoneNumber ?? '');
     mySecondPhoneNumber = TextEditingController(text: data?.mySecondPhoneNumber ?? '');
@@ -35,7 +35,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: (myData.isEmpty) ? const Text('S E T   P R O F I L E '): const Text('P R O F I L E'),
+        title: (myRecord.isFilled) ? const Text('S E T   P R O F I L E '): const Text('P R O F I L E'),
         leading: IconButton(onPressed: (){
           Navigator.popAndPushNamed(context, '/home');
         }, icon: const Icon(Icons.arrow_back_ios_new)),
@@ -83,10 +83,10 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                 myEmailAddress: isDataNull(myEmailAddress.text, 'No Data recorded.'), 
                 myHomeAddress: isDataNull(myHomeAddress.text, 'No Data recorded.')
               );
-              if(myData.isEmpty){
-                Book().addPersonalContact(info);
+              if(myRecord.isFilled){
+                myRecord.addPersonalContact(info);
               } else {
-                Book().updatePersonalContact(info);
+                myRecord.updatePersonalContact(info);
               }
             });
             Navigator.popAndPushNamed(context, '/home');

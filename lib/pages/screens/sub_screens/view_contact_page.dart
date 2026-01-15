@@ -1,13 +1,15 @@
-import 'package:contact_manager/utils/profile.dart';
+import 'package:contact_manager/functions/call_function.dart';
+import 'package:contact_manager/utils/widgets/profile.dart';
 import 'package:flutter/material.dart';
-import '../data/database.dart';
-import '../data/models/Contact.dart';
-import '../functions/barrel.dart';
-import '../utils/app_button.dart';
-import '../utils/user_field_entry.dart';
+import 'package:hive/hive.dart';
+import '../../../data/database.dart';
+import '../../../data/models/Contact.dart';
+import '../../../functions/barrel.dart';
+import '../../../utils/widgets/app_button.dart';
+import '../../../utils/widgets/field_entry/user_field_entry.dart';
 //import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:permission_handler/permission_handler.dart';
+//import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+//import 'package:permission_handler/permission_handler.dart';
 
 // ignore: must_be_immutable
 class ViewContactPage extends StatefulWidget {
@@ -35,11 +37,17 @@ class ViewContactPage extends StatefulWidget {
 }
 
 class _ViewContactPageState extends State<ViewContactPage> {
+  RecipientData record = RecipientData();
+
+  var box = Hive.box<QuickCallList>('QuickCalls');  
+
   late TextEditingController _recipientName;
   late TextEditingController _recipientPhoneNumber;
   late TextEditingController _recipientEmailAddress;
   late TextEditingController _recipientAddress;
   late TextEditingController _recipientRelation;
+
+  MakeCall call = MakeCall();
 
   @override
   void initState() {
@@ -76,7 +84,7 @@ class _ViewContactPageState extends State<ViewContactPage> {
         recipientAddress: isDataNull(_recipientAddress.text, 'No data recorded.'), 
         recipientRelation: isDataNull(_recipientRelation.text, 'No data recorded.'),);
       setState(() {
-        Book().updateContact(widget.index, contact);  
+        record.updateContact(widget.index, contact);  
       });
       Navigator.popAndPushNamed(context, '/home');  
       disposeControllerData();
@@ -85,45 +93,9 @@ class _ViewContactPageState extends State<ViewContactPage> {
 
   void deleteContactData(int index){
     setState(() {
-      Book().deleteContact(index);
+      record.deleteContact(index);
     });
     disposeControllerData();
-
-  }
-  /*
-  Future<void> makePhoneCall(String? contactNumber) async {
-    final Uri phoneUri = Uri(scheme: 'tel', path: contactNumber);
-    if (await canLaunchUrl(phoneUri)){
-      await launchUrl(phoneUri);
-    } else {
-      showDialog(context: context, builder: (BuildContext context){
-        return AlertDialog(
-          title: const Text('SOMETHING WENT WRONG...'),
-          content: const Text('Unable to make a call, something went wrong.'),
-          actions: [
-            AppButton(onPressedEvent: (){
-              Navigator.pop(context);
-            }, content: const Text('O K A Y '))
-          ],
-        );
-      });
-    }
-  }
-  */
-
-  Future<void> makePhoneCall(String? contactNumber) async {
-    var status = await Permission.phone.status;
-    if(!status.isGranted){
-      status = await Permission.phone.request();
-    } 
-
-    if(status.isGranted){
-      await FlutterPhoneDirectCaller.callNumber(contactNumber!);
-    } else {
-      showErrorDialog(context, 
-      "Something went Wrong...", 
-      "Permission was denied to make calls");
-    }
   }
   
   @override
@@ -172,7 +144,7 @@ class _ViewContactPageState extends State<ViewContactPage> {
                 child: SizedBox(
                   height: 75,
                   width: 75,
-                  child: ContactProfile(name: widget.recipientName),
+                  child: ContactProfile(name: widget.recipientName, radius: 15,),
                 ),
               ),
             
@@ -189,7 +161,7 @@ class _ViewContactPageState extends State<ViewContactPage> {
                 relation: _recipientRelation
               ),
               
-              SizedBox(height: (widget.isBeingModified) ? 100 : 50,),
+              SizedBox(height: (widget.isBeingModified) ? 100 : 100,),
               
               (!widget.isBeingModified) ?
               Center(
@@ -198,7 +170,15 @@ class _ViewContactPageState extends State<ViewContactPage> {
                   width: 75,
                   child: CircularAppButton(
                     onPressedEvent: (){
-                      makePhoneCall(widget.recipientPhoneNumber);
+                      try {
+                        call.makePhoneCall(widget.recipientPhoneNumber);  
+                      } catch (e) {
+                        showErrorDialog(
+                          context, 
+                          'Something went wrong!', 
+                          "Unknown Exception: $e"
+                          );
+                      }
                     }, 
                     content: const Icon(Icons.phone)),
                 ),
