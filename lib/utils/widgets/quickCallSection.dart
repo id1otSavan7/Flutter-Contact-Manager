@@ -3,6 +3,7 @@ import 'package:contact_manager/data/models/Contact.dart';
 import 'package:contact_manager/functions/call_function.dart';
 import 'package:contact_manager/functions/globals.dart';
 import 'package:contact_manager/functions/helpers.dart';
+import 'package:contact_manager/utils/widgets/app_button.dart';
 import 'package:contact_manager/utils/widgets/profile.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +55,7 @@ class _BuildQuickCallSectionState extends State<BuildQuickCallSection> {
                       },
                       icon: (isEdittingQC)
                           ? const Icon(Icons.close)
-                          : const Icon(Icons.edit))
+                          : const Icon(Icons.delete))
                 ],
               )
           ],
@@ -111,12 +112,26 @@ class _BuildQuickCallSectionState extends State<BuildQuickCallSection> {
                     final list = lists[index];
                     return GestureDetector(
                       onTap: () => (isEdittingQC)
-                          ? setState(() {
-                              widget.quickCalls.removeDataToList(index);
-                              if(isEdittingQC && !widget.quickCalls.content){
-                                isEdittingQC = false;
-                              }
-                            })
+                          ? showDialog(context: context, builder: (_){
+                            return AlertDialog(
+                              title: const Text("You're trying to remove something..."),
+                              content: const Text("You are trying to remove this data from your Quick Dial List. Are you sure about this?"),
+                              actions: [
+                                AppButton(onPressedEvent: (){
+                                  Navigator.pop(context);
+                                }, content: const Text("CANCEL")),
+                                AppButton(onPressedEvent: (){
+                                  setState(() {
+                                    widget.quickCalls.removeDataToList(list);
+                                    if(isEdittingQC && !widget.quickCalls.content){
+                                      isEdittingQC = false;
+                                    }
+                                  });
+                                  Navigator.pop(context);
+                                }, content: const Text("CONFIRM", style: TextStyle(color: Colors.red),))
+                              ],
+                            );
+                          })
                           : MakeCall().makePhoneCall(list.contactNumber),
                       child: Container(
                         color: Colors.white,

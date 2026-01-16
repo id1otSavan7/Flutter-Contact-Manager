@@ -54,7 +54,7 @@ class MyContact extends HiveObject {
 }
 
 @HiveType(typeId: 2)
-class QuickCallList {
+class QuickCallList extends HiveObject {
   @HiveField(0)
   String? contactName;
   

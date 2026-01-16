@@ -13,23 +13,13 @@ import '../../../utils/widgets/field_entry/user_field_entry.dart';
 
 // ignore: must_be_immutable
 class ViewContactPage extends StatefulWidget {
-  final int index;
+  final Contact contact;
   late bool isBeingModified;
-  final String? recipientName;
-  final String? recipientPhoneNumber;
-  final String? recipientEmailAddress;
-  final String? recipientAddress;
-  final String? recipientRelation;
 
   ViewContactPage({
     super.key,
-    required this.index,
+    required this.contact,
     required this.isBeingModified,
-    required this.recipientName,
-    required this.recipientPhoneNumber,
-    required this.recipientEmailAddress,
-    required this.recipientAddress,
-    required this.recipientRelation,
     });
 
   @override
@@ -52,11 +42,11 @@ class _ViewContactPageState extends State<ViewContactPage> {
   @override
   void initState() {
     super.initState();
-    _recipientName = TextEditingController(text: widget.recipientName);
-    _recipientPhoneNumber = TextEditingController(text: widget.recipientPhoneNumber);
-    _recipientEmailAddress = TextEditingController(text: widget.recipientEmailAddress);
-    _recipientAddress = TextEditingController(text: widget.recipientAddress);
-    _recipientRelation = TextEditingController(text: widget.recipientRelation);
+    _recipientName = TextEditingController(text: widget.contact.recipientName);
+    _recipientPhoneNumber = TextEditingController(text: widget.contact.recipientPhoneNumber);
+    _recipientEmailAddress = TextEditingController(text: widget.contact.recipientEmailAddress);
+    _recipientAddress = TextEditingController(text: widget.contact.recipientAddress);
+    _recipientRelation = TextEditingController(text: widget.contact.recipientRelation);
   }
 
   @override
@@ -84,16 +74,16 @@ class _ViewContactPageState extends State<ViewContactPage> {
         recipientAddress: isDataNull(_recipientAddress.text, 'No data recorded.'), 
         recipientRelation: isDataNull(_recipientRelation.text, 'No data recorded.'),);
       setState(() {
-        record.updateContact(widget.index, contact);  
+        record.updateContact(widget.contact, contact);  
       });
       Navigator.popAndPushNamed(context, '/home');  
       disposeControllerData();
     }     
   }
 
-  void deleteContactData(int index){
+  void deleteContactData(){
     setState(() {
-      record.deleteContact(index);
+      record.deleteContact(widget.contact);
     });
     disposeControllerData();
   }
@@ -123,10 +113,10 @@ class _ViewContactPageState extends State<ViewContactPage> {
                       Navigator.pop(context);
                     }, content: const Text('CANCEL')),
                     AppButton(onPressedEvent: (){
-                      deleteContactData(widget.index);
+                      deleteContactData();
                       Navigator.pop(context);
                       Navigator.popAndPushNamed(context, "/home");
-                    }, content: const Text('CONFIRM')),
+                    }, content: const Text('CONFIRM', style: TextStyle(color: Colors.red),)),
                   ],
                 );
               });
@@ -142,9 +132,9 @@ class _ViewContactPageState extends State<ViewContactPage> {
             children: [
               Center(
                 child: SizedBox(
-                  height: 75,
-                  width: 75,
-                  child: ContactProfile(name: widget.recipientName, radius: 15,),
+                  height: 50,
+                  width: 50,
+                  child: ContactProfile(name: widget.contact.recipientName, radius: 15,),
                 ),
               ),
             
@@ -164,24 +154,56 @@ class _ViewContactPageState extends State<ViewContactPage> {
               SizedBox(height: (widget.isBeingModified) ? 100 : 100,),
               
               (!widget.isBeingModified) ?
-              Center(
-                child: SizedBox(
-                  height: 75,
-                  width: 75,
-                  child: CircularAppButton(
-                    onPressedEvent: (){
-                      try {
-                        call.makePhoneCall(widget.recipientPhoneNumber);  
-                      } catch (e) {
-                        showErrorDialog(
-                          context, 
-                          'Something went wrong!', 
-                          "Unknown Exception: $e"
-                          );
-                      }
-                    }, 
-                    content: const Icon(Icons.phone)),
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CircularAppButton(
+                      onPressedEvent: (){
+                        try {
+                          call.openMessage(widget.contact.recipientPhoneNumber);  
+                        } catch (e) {
+                          showErrorDialog(
+                            context, 
+                            'Something went wrong!', 
+                            "Unknown Exception: $e"
+                            );
+                        }
+                      }, 
+                      content: const Icon(Icons.message)),
+                  ),
+
+                  SizedBox(
+                    height: 75,
+                    width: 75,
+                    child: CircularAppButton(
+                      onPressedEvent: (){
+                        try {
+                          call.makePhoneCall(widget.contact.recipientPhoneNumber);  
+                        } catch (e) {
+                          showErrorDialog(
+                            context, 
+                            'Something went wrong!', 
+                            "Unknown Exception: $e"
+                            );
+                        }
+                      }, 
+                      content: const Icon(Icons.phone)),
+                  ),
+
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CircularAppButton(
+                      onPressedEvent: (){
+
+                      }, 
+                      content: const Text('')),
+                  ),
+                ],
               ) : Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

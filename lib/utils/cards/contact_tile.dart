@@ -5,14 +5,12 @@ import 'package:contact_manager/utils/widgets/profile.dart';
 import 'package:flutter/material.dart';
 
 class ContactTile extends StatefulWidget {
-  final Contact? contact;
-  final int index;
+  final Contact contact;
   final bool isBeingModified;
 
   const ContactTile({
     super.key,
     required this.contact,
-    required this.index,
     required this.isBeingModified,
     });
 
@@ -29,20 +27,15 @@ class _ContactTileState extends State<ContactTile> {
         ),
       color: defaultColor,
       child: ListTile(
-        leading: ContactProfile(name: widget.contact!.recipientName, radius: 20,),
-        title: Text(widget.contact!.recipientName ?? 'Unknown Recipient'),
-        subtitle: Text(widget.contact!.recipientPhoneNumber ?? ''),
+        leading: ContactProfile(name: widget.contact.recipientName, radius: 20,),
+        title: Text(widget.contact.recipientName ?? 'Unknown Recipient'),
+        subtitle: Text(widget.contact.recipientPhoneNumber ?? ''),
         onTap: () {
           Navigator.pushReplacement(
             context, 
             MaterialPageRoute(builder: (BuildContext context) => ViewContactPage(
-              index: widget.index, 
+              contact: widget.contact, 
               isBeingModified: widget.isBeingModified, 
-              recipientName: widget.contact!.recipientName, 
-              recipientPhoneNumber: widget.contact!.recipientPhoneNumber, 
-              recipientEmailAddress: widget.contact!.recipientEmailAddress, 
-              recipientAddress: widget.contact!.recipientAddress, 
-              recipientRelation: widget.contact!.recipientRelation
             )),
           );
           

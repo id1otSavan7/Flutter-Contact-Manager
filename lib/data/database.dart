@@ -20,29 +20,31 @@ class RecipientData {
   }
 
   //Function to update current contact data in the hive.
-  Future<void> updateContact(int index, Contact newContact) async {
+  Future<void> updateContact(Contact contactToUpdate, Contact newContact) async {
     if (_data.isNotEmpty) {
-      await _data.putAt(index, newContact);
-      print('$index Data was updated');
+      await _data.put(contactToUpdate.key, newContact);
+      print('$contactToUpdate Data was updated');
     }
   }
 
-  //Function to remove a certain indexed contact in the hive.
-  Future<void> deleteContact(int index) async {
+  //Function to remove a certain contact in the hive.
+  Future<void> deleteContact(Contact contactToDelete) async {
     if (_data.isNotEmpty) {
-      /*
-      final list = _qcList.fetchData();
-
-      for (final qcData in list){
-        final data = _data.values.firstWhere(
-          (c) => c.recipientPhoneNumber == qcData.contactNumber, 
-        );
-      }
-      */
-      final contacts = fetchContactData();
-      final dataToDelete = contacts![index];
-      final key = dataToDelete.key;
+      final key = contactToDelete.key;
       await _data.delete(key);
+      print('${contactToDelete.recipientName} was removed from your Contact List');
+
+      // Also delete from QuickCallList if it exists
+      final qcRecord = QuickCallDataRecord();
+      final qcList = qcRecord.fetchData();
+      if (qcList != null) {
+        for (final qcData in qcList) {
+          if (qcData.contactNumber == contactToDelete.recipientPhoneNumber) {
+            await qcRecord.removeDataToList(qcData);
+            break; // Assuming only one match per phone number
+          }
+        }
+      }
     }
   }
 
@@ -109,7 +111,6 @@ class QuickCallDataRecord {
 
   List<QuickCallList>? fetchData() {
     List<QuickCallList>? qcList = [];
-
     if(_list.isNotEmpty){
       qcList = _list.values.toList();
       return qcList;
@@ -122,15 +123,15 @@ class QuickCallDataRecord {
     print("Recipient added to QuickCall List...");
   }
 
-  Future<void> removeDataToList(int index) async {
+  Future<void> removeDataToList(QuickCallList dataToDelete) async {
     if(_list.isNotEmpty){
-      await _list.delete(index);
-      print("$index QuickCall Data Removed...");
+      var key = dataToDelete.key;
+      await _list.delete(key);
+      print("${dataToDelete.contactName} was Removed from your QuickCall List...");
     }
   }
 
   Future<void> clearListData() async {
     await _list.clear();
-
   }
 }

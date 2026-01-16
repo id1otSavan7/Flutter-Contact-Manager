@@ -57,7 +57,7 @@ class _HomepageState extends State<Homepage> {
         recipientRelation: 'No data recorded.'
       ));
     }
-    
+
     record.addContact(Contact(
         recipientName: 'Lance Andrei Sombillo', 
         recipientPhoneNumber: '09936115161', 
@@ -202,15 +202,7 @@ class _HomepageState extends State<Homepage> {
                           itemBuilder: (context, index) {
                             final contact = contacts[index];
                             return ContactTile(
-                              contact: Contact(
-                                  recipientName: contact.recipientName,
-                                  recipientPhoneNumber:
-                                      contact.recipientPhoneNumber,
-                                  recipientEmailAddress:
-                                      contact.recipientEmailAddress,
-                                  recipientAddress: contact.recipientAddress,
-                                  recipientRelation: contact.recipientRelation),
-                              index: index,
+                              contact: contact,
                               isBeingModified: false,
                             );
                           });

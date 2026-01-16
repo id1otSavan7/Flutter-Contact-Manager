@@ -18,7 +18,7 @@ String? isDataNull(String? data, String fallback){
 void showErrorDialog(BuildContext context, String? title, String? msg){
   showDialog(
       context: context,
-      builder: (BuildContext context){
+      builder: (_){
         return AlertDialog(
           title: Text(title!),
           content: Text(msg!),
@@ -67,19 +67,26 @@ void addQuickCallData(BuildContext context, RecipientData record, QuickCallDataR
                     Container(
                         padding: const EdgeInsets.only(top: 25, bottom: 25),
                         child: const Text(
-                          "Add someone...",
+                          "Add recipient for a Quick Dial",
                           style: TextStyle(
                               fontSize: 26, fontWeight: FontWeight.bold),
                         )),
                     SizedBox(
-                      height: 250,
+                      height: 400,
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
                         child: ListView.builder(
                             itemCount: record.length,
                             itemBuilder: (context, index) {
                               final contacts = record.fetchContactData();
+                              final lists = dataRecord.fetchData();
                               final data = contacts?[index];
+                              // Check if the contact's phone number already exists in QuickCallList
+                              bool alreadyInQuickCall = lists?.any((qcData) => qcData.contactNumber == data?.recipientPhoneNumber) ?? false;
+                              // If it exists, don't show this contact
+                              if (alreadyInQuickCall) {
+                                return const SizedBox.shrink();
+                              }
                               return RecipientQcCard(data: data);
                             }),
                       ),
