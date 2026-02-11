@@ -46,42 +46,6 @@ class _HomepageState extends State<Homepage> {
     // TODO: implement initState
     super.initState();
     myInfo = myRecord.fetchPersonalData();
-    /*
-    bool ifItExists = phoneNumberExists('911');
-    if(!ifItExists){
-      record.addContact(Contact(
-        recipientName: '**Emergency-Line**', 
-        recipientPhoneNumber: '911', 
-        recipientEmailAddress: 'No data recorded.', 
-        recipientAddress: 'No data recorded.', 
-        recipientRelation: 'No data recorded.'
-      ));
-    }
-
-    record.addContact(Contact(
-        recipientName: 'Lance Andrei Sombillo', 
-        recipientPhoneNumber: '09936115161', 
-        recipientEmailAddress: 'No data recorded.', 
-        recipientAddress: 'No data recorded.', 
-        recipientRelation: 'No data recorded.'
-      ));
-
-      record.addContact(Contact(
-        recipientName: 'Julian Menendez', 
-        recipientPhoneNumber: '09952167134', 
-        recipientEmailAddress: 'No data recorded.', 
-        recipientAddress: 'No data recorded.', 
-        recipientRelation: 'No data recorded.'
-      ));
-
-      record.addContact(Contact(
-        recipientName: 'Aaron Luis Dagul', 
-        recipientPhoneNumber: '09996335112', 
-        recipientEmailAddress: 'No data recorded.', 
-        recipientAddress: 'No data recorded.', 
-        recipientRelation: 'No data recorded.'
-      ));
-      */
   }
 
   Widget buildSearchBar(BuildContext context) {
@@ -157,7 +121,22 @@ class _HomepageState extends State<Homepage> {
               ],
               if (!isSearching) ...[BuildQuickCallSection(quickCalls: quickCalls, record: record)],
               if (!isSearching && myRecord.isFilled) ...[
-                const Text("My Profile"),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: defaultTextColor,
+                        width: 2,
+                      )
+                    )
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: Text("My Profile", style: headerTextStyle,),
+                  )
+                ),
+                const SizedBox(height: 10,),
                 PersonalContactTile(
                   name: myInfo?.myName,
                   activePhoneNumber: myInfo?.myFirstPhoneNumber,
@@ -166,7 +145,22 @@ class _HomepageState extends State<Homepage> {
                   height: 10,
                 )
               ],
-              const Text("Contact List"),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: defaultTextColor,
+                      width: 2,
+                    )
+                  )
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  child: Text("Contact List", style: headerTextStyle,),
+                )
+              ),
+              const SizedBox(height: 10,),
               Expanded(
                 child: ValueListenableBuilder(
                     valueListenable: record.listenables,

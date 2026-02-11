@@ -22,7 +22,13 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
   @override
   void initState() {
     super.initState();
-    if(myRecord.isFilled) setState(() => isBeingModified = false); 
+    if(myRecord.isFilled){
+      isBeingModified = false;
+      print("Personal Contact Already Exists!");
+    } else {
+      isBeingModified = true;
+      print("Personal Contact Not Found!");
+    }
     MyContact? data = myRecord.fetchPersonalData();
     myName = TextEditingController(text: data?.myName ?? '');
     myFirstPhoneNumber = TextEditingController(text: data?.myFirstPhoneNumber ?? '');
@@ -40,7 +46,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
           Navigator.popAndPushNamed(context, '/home');
         }, icon: const Icon(Icons.arrow_back_ios_new)),
         actions: [
-          if (isBeingModified) ...[
+          if (!isBeingModified) ...[
             AppIconButton(onPressedEvent: (){
               setState(() {
                 isBeingModified = !isBeingModified;
@@ -57,7 +63,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
             child: Column(
               children: [
                 PersonalFieldEntry(
-                  isBeingModified: isBeingModified, 
+                  isBeingModified: !isBeingModified, 
                   name: myName, 
                   firstPhoneNumber: myFirstPhoneNumber, 
                   secondPhoneNumber: mySecondPhoneNumber, 
@@ -70,11 +76,15 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
         ),
       ),
       persistentFooterButtons: [
-        if(!isBeingModified) ...[
-          AppButton(onPressedEvent: (){
+        if(isBeingModified) ...[
+          AppButton(
+            buttonColor: cancelButtonColor,
+            onPressedEvent: (){
             Navigator.popAndPushNamed(context, '/home');
           }, content: const Text("C A N C E L ")),
-          AppButton(onPressedEvent: (){
+          AppButton(
+            buttonColor: saveButtonColor,
+            onPressedEvent: (){
             setState(() {
               final info = MyContact(
                 myName: isDataNull(myName.text, 'Unknown Recipient'), 
@@ -83,10 +93,14 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                 myEmailAddress: isDataNull(myEmailAddress.text, 'No Data recorded.'), 
                 myHomeAddress: isDataNull(myHomeAddress.text, 'No Data recorded.')
               );
-              if(myRecord.isFilled){
+              if(!myRecord.isFilled){
                 myRecord.addPersonalContact(info);
+                isBeingModified = false;
+                print("Personal Contact Added!");
               } else {
                 myRecord.updatePersonalContact(info);
+                isBeingModified = false;
+                print("Personal Contact Updated!");
               }
             });
             Navigator.popAndPushNamed(context, '/home');

@@ -37,7 +37,10 @@ class EmptyListNotice extends StatelessWidget {
                       children: [
                         const Text('List is currently Empty...'),
                         const SizedBox(height: 50,),
-                        AppButton(onPressedEvent: function, content: const Text('ADD CONTACT?'))
+                        AppButton(
+                          buttonColor: defaultButtonColor,
+                          onPressedEvent: function, 
+                          content: const Text('ADD CONTACT?'))
                       ],
                     )
                   ),

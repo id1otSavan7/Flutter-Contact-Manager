@@ -26,8 +26,8 @@ class _PersonalContactTileState extends State<PersonalContactTile> {
       color: defaultColor,
       child: ListTile(
         leading: ContactProfile(name: widget.name, radius: 20,),
-        title: Text(widget.name ?? 'Unknown Recipient'),
-        subtitle: Text(widget.activePhoneNumber ?? ''),
+        title: Text(widget.name ?? 'Unknown Recipient', style: titleTextStyle),
+        subtitle: Text(widget.activePhoneNumber ?? '', style: subtitleTextStyle),
         onTap: () {
           Navigator.of(context).popAndPushNamed('/viewProfile');
         },

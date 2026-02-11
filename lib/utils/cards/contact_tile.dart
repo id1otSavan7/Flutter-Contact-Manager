@@ -22,14 +22,16 @@ class _ContactTileState extends State<ContactTile> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 2,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10)
         ),
       color: defaultColor,
+      shadowColor: Colors.grey[300],
       child: ListTile(
         leading: ContactProfile(name: widget.contact.recipientName, radius: 20,),
-        title: Text(widget.contact.recipientName ?? 'Unknown Recipient'),
-        subtitle: Text(widget.contact.recipientPhoneNumber ?? ''),
+        title: Text(widget.contact.recipientName ?? 'Unknown Recipient', style: titleTextStyle),
+        subtitle: Text(widget.contact.recipientPhoneNumber ?? '', style: subtitleTextStyle),
         onTap: () {
           Navigator.pushReplacement(
             context, 

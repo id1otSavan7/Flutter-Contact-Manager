@@ -23,7 +23,9 @@ void showErrorDialog(BuildContext context, String? title, String? msg){
           title: Text(title!),
           content: Text(msg!),
           actions: [
-            AppButton(onPressedEvent: (){
+            AppButton(
+              buttonColor: defaultButtonColor,
+              onPressedEvent: (){
               Navigator.pop(context);
             }, content: const Text('R E T R Y'))
           ],
@@ -62,37 +64,51 @@ void addQuickCallData(BuildContext context, RecipientData record, QuickCallDataR
         context: context,
         builder: (_) {
           return (record.isNotEmpty)
-              ? Column(
-                  children: [
-                    Container(
-                        padding: const EdgeInsets.only(top: 25, bottom: 25),
-                        child: const Text(
-                          "Add recipient for a Quick Dial",
-                          style: TextStyle(
-                              fontSize: 26, fontWeight: FontWeight.bold),
-                        )),
-                    SizedBox(
-                      height: 400,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                        child: ListView.builder(
-                            itemCount: record.length,
-                            itemBuilder: (context, index) {
-                              final contacts = record.fetchContactData();
-                              final lists = dataRecord.fetchData();
-                              final data = contacts?[index];
-                              // Check if the contact's phone number already exists in QuickCallList
-                              bool alreadyInQuickCall = lists?.any((qcData) => qcData.contactNumber == data?.recipientPhoneNumber) ?? false;
-                              // If it exists, don't show this contact
-                              if (alreadyInQuickCall) {
-                                return const SizedBox.shrink();
-                              }
-                              return RecipientQcCard(data: data);
-                            }),
+              ? Container(
+                margin: const EdgeInsets.all(25),
+                child: Column(
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.only(top: 5, bottom: 5),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: defaultTextColor,
+                                width: 2,
+                              )
+                            )
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Add recipient for a Quick Dial",
+                              style: headerTextStyle
+                            ),
+                          )),
+                      const SizedBox(height: 20,),
+                      SizedBox(
+                        height: 275,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                          child: ListView.builder(
+                              itemCount: record.length,
+                              itemBuilder: (context, index) {
+                                final contacts = record.fetchContactData();
+                                final lists = dataRecord.fetchData();
+                                final data = contacts?[index];
+                                // Check if the contact's phone number already exists in QuickCallList
+                                bool alreadyInQuickCall = lists?.any((qcData) => qcData.contactNumber == data?.recipientPhoneNumber) ?? false;
+                                // If it exists, don't show this contact
+                                if (alreadyInQuickCall) {
+                                  return const SizedBox.shrink();
+                                }
+                                return RecipientQcCard(data: data);
+                              }),
+                        ),
                       ),
-                    ),
-                  ],
-                )
+                    ],
+                  ),
+              )
               : EmptyListNotice(
                   function: () {
                     Navigator.popAndPushNamed(context, '/addContact');

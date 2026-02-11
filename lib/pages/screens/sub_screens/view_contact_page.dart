@@ -20,7 +20,7 @@ class ViewContactPage extends StatefulWidget {
     super.key,
     required this.contact,
     required this.isBeingModified,
-    });
+  });
 
   @override
   State<ViewContactPage> createState() => _ViewContactPageState();
@@ -29,7 +29,7 @@ class ViewContactPage extends StatefulWidget {
 class _ViewContactPageState extends State<ViewContactPage> {
   RecipientData record = RecipientData();
 
-  var box = Hive.box<QuickCallList>('QuickCalls');  
+  var box = Hive.box<QuickCallList>('QuickCalls');
 
   late TextEditingController _recipientName;
   late TextEditingController _recipientPhoneNumber;
@@ -43,10 +43,14 @@ class _ViewContactPageState extends State<ViewContactPage> {
   void initState() {
     super.initState();
     _recipientName = TextEditingController(text: widget.contact.recipientName);
-    _recipientPhoneNumber = TextEditingController(text: widget.contact.recipientPhoneNumber);
-    _recipientEmailAddress = TextEditingController(text: widget.contact.recipientEmailAddress);
-    _recipientAddress = TextEditingController(text: widget.contact.recipientAddress);
-    _recipientRelation = TextEditingController(text: widget.contact.recipientRelation);
+    _recipientPhoneNumber =
+        TextEditingController(text: widget.contact.recipientPhoneNumber);
+    _recipientEmailAddress =
+        TextEditingController(text: widget.contact.recipientEmailAddress);
+    _recipientAddress =
+        TextEditingController(text: widget.contact.recipientAddress);
+    _recipientRelation =
+        TextEditingController(text: widget.contact.recipientRelation);
   }
 
   @override
@@ -60,167 +64,188 @@ class _ViewContactPageState extends State<ViewContactPage> {
   }
 
   void submitModifiedData() {
-    if (_recipientPhoneNumber.text.isEmpty){
-      showErrorDialog(
-        context, 
-        'AN IMPORTANT FIELD WAS LEFT EMPTY', 
-        'Are you trying to add a contact? A contact info atleast must have a Phone Number...'
-      );
+    if (_recipientPhoneNumber.text.isEmpty) {
+      showErrorDialog(context, 'AN IMPORTANT FIELD WAS LEFT EMPTY',
+          'Are you trying to add a contact? A contact info atleast must have a Phone Number...');
     } else {
       final contact = Contact(
-        recipientName: isDataNull(_recipientName.text, 'Unknown Recipient'), 
-        recipientPhoneNumber: _recipientPhoneNumber.text, 
-        recipientEmailAddress: isDataNull(_recipientEmailAddress.text, 'No data recorded.'), 
-        recipientAddress: isDataNull(_recipientAddress.text, 'No data recorded.'), 
-        recipientRelation: isDataNull(_recipientRelation.text, 'No data recorded.'),);
+        recipientName: isDataNull(_recipientName.text, 'Unknown Recipient'),
+        recipientPhoneNumber: _recipientPhoneNumber.text,
+        recipientEmailAddress:
+            isDataNull(_recipientEmailAddress.text, 'No data recorded.'),
+        recipientAddress:
+            isDataNull(_recipientAddress.text, 'No data recorded.'),
+        recipientRelation:
+            isDataNull(_recipientRelation.text, 'No data recorded.'),
+      );
       setState(() {
-        record.updateContact(widget.contact, contact);  
+        record.updateContact(widget.contact, contact);
       });
-      Navigator.popAndPushNamed(context, '/home');  
+      Navigator.popAndPushNamed(context, '/home');
       disposeControllerData();
-    }     
+    }
   }
 
-  void deleteContactData(){
+  void deleteContactData() {
     setState(() {
       record.deleteContact(widget.contact);
     });
     disposeControllerData();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('C O N T A C T   I N F O '),
-        leading: IconButton(onPressed: (){
-          Navigator.popAndPushNamed(context, '/home');
-        }, icon: const Icon(Icons.arrow_back_ios_new)),
-        actions: [
-          if (!widget.isBeingModified) ...[
-            AppIconButton(onPressedEvent: (){
-              setState(() {
-                widget.isBeingModified = !widget.isBeingModified;
-              });
-            }, content: const Icon(Icons.edit)),
-            AppIconButton(onPressedEvent: (){
-              showDialog(context: context, builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('REMOVE CONTACT DATA?'),
-                  content: const Text('You are currently attempting to remove this data, are you sure about this?'),
-                  actions: [
-                    AppButton(onPressedEvent: (){
-                      Navigator.pop(context);
-                    }, content: const Text('CANCEL')),
-                    AppButton(onPressedEvent: (){
-                      deleteContactData();
-                      Navigator.pop(context);
-                      Navigator.popAndPushNamed(context, "/home");
-                    }, content: const Text('CONFIRM', style: TextStyle(color: Colors.red),)),
-                  ],
-                );
-              });
-            }, content: const Icon(Icons.delete))
-          ]
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: defaultColor,
-          padding: const EdgeInsets.all(30),
-          child: Column(
-            children: [
-              Center(
-                child: SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: ContactProfile(name: widget.contact.recipientName, radius: 15,),
-                ),
-              ),
-            
-              const SizedBox(
-                height: 25,
-              ),
-                  
-              UserEntryField(
-                isBeingModified: !widget.isBeingModified, 
-                name: _recipientName, 
-                phoneNumber: _recipientPhoneNumber, 
-                email: _recipientEmailAddress, 
-                address: _recipientAddress, 
-                relation: _recipientRelation
-              ),
-              
-              SizedBox(height: (widget.isBeingModified) ? 100 : 100,),
-              
-              (!widget.isBeingModified) ?
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: CircularAppButton(
-                      onPressedEvent: (){
-                        try {
-                          call.openMessage(widget.contact.recipientPhoneNumber);  
-                        } catch (e) {
-                          showErrorDialog(
-                            context, 
-                            'Something went wrong!', 
-                            "Unknown Exception: $e"
-                            );
-                        }
-                      }, 
-                      content: const Icon(Icons.message)),
-                  ),
-
-                  SizedBox(
+      backgroundColor: defaultBodyColor,
+        appBar: AppBar(
+          title: const Text('C O N T A C T   I N F O '),
+          backgroundColor: defaultColor,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.popAndPushNamed(context, '/home');
+              },
+              icon: const Icon(Icons.arrow_back_ios_new)),
+          actions: [
+            if (!widget.isBeingModified) ...[
+              AppIconButton(
+                  onPressedEvent: () {
+                    setState(() {
+                      widget.isBeingModified = !widget.isBeingModified;
+                    });
+                  },
+                  content: const Icon(Icons.edit)),
+              AppIconButton(
+                  onPressedEvent: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('REMOVE CONTACT DATA?'),
+                            content: const Text(
+                                'You are currently attempting to remove this data, are you sure about this?'),
+                            actions: [
+                              AppButton(
+                                  buttonColor: cancelButtonColor,
+                                  onPressedEvent: () {
+                                    Navigator.pop(context);
+                                  },
+                                  content: const Text('CANCEL')),
+                              AppButton(
+                                  buttonColor: saveButtonColor,
+                                  onPressedEvent: () {
+                                    deleteContactData();
+                                    Navigator.pop(context);
+                                    Navigator.popAndPushNamed(context, "/home");
+                                  },
+                                  content: const Text(
+                                    'CONFIRM',
+                                    style: TextStyle(color: Colors.red),
+                                  )),
+                            ],
+                          );
+                        });
+                  },
+                  content: const Icon(Icons.delete))
+            ]
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(30),
+            child: Column(
+              children: [
+                Center(
+                  child: SizedBox(
                     height: 75,
                     width: 75,
-                    child: CircularAppButton(
-                      onPressedEvent: (){
-                        try {
-                          call.makePhoneCall(widget.contact.recipientPhoneNumber);  
-                        } catch (e) {
-                          showErrorDialog(
-                            context, 
-                            'Something went wrong!', 
-                            "Unknown Exception: $e"
-                            );
-                        }
-                      }, 
-                      content: const Icon(Icons.phone)),
+                    child: ContactProfile(
+                      name: widget.contact.recipientName,
+                      radius: 25,
+                    ),
                   ),
-
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: CircularAppButton(
-                      onPressedEvent: (){
-
-                      }, 
-                      content: const Text('')),
-                  ),
-                ],
-              ) : Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  AppButton(onPressedEvent: (){
-                    setState(() {
-                      widget.isBeingModified = false;
-                    });
-                  }, content: const Text('CANCEL')),
-                  AppButton(onPressedEvent: (){
-                    submitModifiedData();
-                  }, content: const Text('SAVE')),
-                ],
-              )
-            ],
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                UserEntryField(
+                    isBeingModified: !widget.isBeingModified,
+                    name: _recipientName,
+                    phoneNumber: _recipientPhoneNumber,
+                    email: _recipientEmailAddress,
+                    address: _recipientAddress,
+                    relation: _recipientRelation),
+                SizedBox(
+                  height: (widget.isBeingModified) ? 100 : 100,
+                ),
+                (!widget.isBeingModified)
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularAppButton(
+                                onPressedEvent: () {
+                                  try {
+                                    call.openMessage(
+                                        widget.contact.recipientPhoneNumber);
+                                  } catch (e) {
+                                    showErrorDialog(
+                                        context,
+                                        'Something went wrong!',
+                                        "Unknown Exception: $e");
+                                  }
+                                },
+                                content: const Icon(Icons.message)),
+                          ),
+                          SizedBox(
+                            height: 75,
+                            width: 75,
+                            child: CircularAppButton(
+                                onPressedEvent: () {
+                                  try {
+                                    call.makePhoneCall(
+                                        widget.contact.recipientPhoneNumber);
+                                  } catch (e) {
+                                    showErrorDialog(
+                                        context,
+                                        'Something went wrong!',
+                                        "Unknown Exception: $e");
+                                  }
+                                },
+                                content: const Icon(Icons.phone)),
+                          ),
+                          SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularAppButton(
+                                onPressedEvent: () {}, content: const Text('')),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          AppButton(
+                              buttonColor: cancelButtonColor,
+                              onPressedEvent: () {
+                                setState(() {
+                                  widget.isBeingModified = false;
+                                });
+                              },
+                              content: const Text('CANCEL')),
+                          const SizedBox(width: 5,),
+                          AppButton(
+                              buttonColor: saveButtonColor,
+                              onPressedEvent: () => submitModifiedData(),
+                              content: const Text('SAVE')),
+                        ],
+                      )
+              ],
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
 }

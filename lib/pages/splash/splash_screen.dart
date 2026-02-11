@@ -1,6 +1,5 @@
 import 'package:contact_manager/data/models/Contact.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 
 class ContactSplashScreen extends StatefulWidget {
@@ -16,7 +15,7 @@ class _ContactSplashScreenState extends State<ContactSplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 5), (){
+    Future.delayed(const Duration(seconds: 3), (){
       if(_myData.isEmpty){
         Navigator.of(context).popAndPushNamed('/viewProfile');
       } else {
