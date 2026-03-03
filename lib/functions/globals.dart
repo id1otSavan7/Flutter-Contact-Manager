@@ -7,7 +7,7 @@ Color defaultIconColor = const Color.fromARGB(255, 60, 60, 60);
 Color subtextColor = const Color.fromARGB(255, 100, 100, 100);
 Color saveButtonColor = const Color.fromARGB(255, 125, 255, 125);
 Color cancelButtonColor = const Color.fromARGB(255, 255, 125, 125);
-Color defaultButtonColor = Colors.blueGrey;
+Color? defaultButtonColor = Colors.grey[200];
 
 TextEditingController recipientName = TextEditingController();
 TextEditingController recipientPhoneNumber = TextEditingController();

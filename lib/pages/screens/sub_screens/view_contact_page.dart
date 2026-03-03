@@ -125,7 +125,7 @@ class _ViewContactPageState extends State<ViewContactPage> {
                                 'You are currently attempting to remove this data, are you sure about this?'),
                             actions: [
                               AppButton(
-                                  buttonColor: cancelButtonColor,
+                                  buttonColor: defaultButtonColor,
                                   onPressedEvent: () {
                                     Navigator.pop(context);
                                   },

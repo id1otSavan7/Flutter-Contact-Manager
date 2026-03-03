@@ -111,16 +111,41 @@ class _HomepageState extends State<Homepage> {
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isSearching) ...[
-                buildSearchBar(context),
-                const SizedBox(height: 10),
-              ],
-              if (!isSearching) ...[BuildQuickCallSection(quickCalls: quickCalls, record: record)],
-              if (!isSearching && myRecord.isFilled) ...[
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (isSearching) ...[
+                  buildSearchBar(context),
+                  const SizedBox(height: 10),
+                ],
+                if (!isSearching) ...[BuildQuickCallSection(quickCalls: quickCalls, record: record)],
+                if (!isSearching && myRecord.isFilled) ...[
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: defaultTextColor,
+                          width: 2,
+                        )
+                      )
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      child: Text("My Profile", style: headerTextStyle,),
+                    )
+                  ),
+                  const SizedBox(height: 10,),
+                  PersonalContactTile(
+                    name: myInfo?.myName,
+                    activePhoneNumber: myInfo?.myFirstPhoneNumber,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  )
+                ],
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -133,36 +158,11 @@ class _HomepageState extends State<Homepage> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    child: Text("My Profile", style: headerTextStyle,),
+                    child: Text("Contact List", style: headerTextStyle,),
                   )
                 ),
                 const SizedBox(height: 10,),
-                PersonalContactTile(
-                  name: myInfo?.myName,
-                  activePhoneNumber: myInfo?.myFirstPhoneNumber,
-                ),
-                const SizedBox(
-                  height: 10,
-                )
-              ],
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: defaultTextColor,
-                      width: 2,
-                    )
-                  )
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                  child: Text("Contact List", style: headerTextStyle,),
-                )
-              ),
-              const SizedBox(height: 10,),
-              Expanded(
-                child: ValueListenableBuilder(
+                ValueListenableBuilder(
                     valueListenable: record.listenables,
                     builder: (context, box, _) {
                       List<Contact> contacts =
@@ -193,6 +193,8 @@ class _HomepageState extends State<Homepage> {
                       }
                       return ListView.builder(
                           itemCount: contacts.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             final contact = contacts[index];
                             return ContactTile(
@@ -201,8 +203,8 @@ class _HomepageState extends State<Homepage> {
                             );
                           });
                     }),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
